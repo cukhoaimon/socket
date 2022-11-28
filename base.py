@@ -15,6 +15,7 @@ def get_header(client) -> str:
         header = data.decode()
     except UnicodeDecodeError as e:
         print(e)
+        exit(324)
     finally:
         return header
 
@@ -26,7 +27,7 @@ def parse_html_page(html_page) -> list:
         _files = soup.find_all('a')
     except _files is not None:
         print("Empty list")
-        return []
+        exit(330)
 
     pattern = ".*\..*"
     ls = []
@@ -78,7 +79,7 @@ def get_folders_directory(url):
     if temp != ['']:
         return  temp[-2]
     else:
-        return ''
+        exit(329)
 
 
 def url_parse(url):
@@ -94,12 +95,13 @@ def send(client, host, path, file_name=''):
         request = request.encode()
     except UnicodeDecodeError as err:
         print(err)
-        return
+        exit(324)
 
     try:
         client.send(request)
-    except socket.error as err:
+    except InterruptedError as err:
         print(err)
+        exit(323)
 
 
 def get_content_length(header) -> int:
@@ -107,14 +109,15 @@ def get_content_length(header) -> int:
     try:
         x = re.search("Content-Length:.*\r\n", header)
         if x is None:
-            print("Error when getting heade")
-            exit(-1)
+            print("Error when getting header")
+            exit(327)
+
         size = int(header[x.start() + len("Content-Length:"): x.end() - len('\r\n')])
     except AttributeError as e:
         print(e)
-        exit(-1)
-    finally:
-        return size
+        exit(326)
+
+    return size
 
 
 def content_length_case(client, header, file_name) -> bytes:
@@ -145,7 +148,7 @@ def parse_chunk(client) -> int:
             temp = temp[0:-2].decode()
         except UnicodeDecodeError as err:
             print(err)
-            temp = 0
+            exit(324)
 
         # cast from hex-bytes to int
         chunk = int(temp, base=16)
@@ -183,7 +186,7 @@ def receive(client, header, file_name):
             data = content_length_case(client, header, file_name)
     except data == b'':
         print(f"There are some error when downloading {file_name}")
-        return
+        exit(325)
 
     # write data to file
     with open(file_name, 'w+b') as f:
@@ -202,11 +205,12 @@ def download_folder(client, url, header):
         page += client.recv(length - len(page))
 
     # Parse to get all file name in sub folder
+    file_names = []
     try:
         file_names = parse_html_page(page.decode())
     except UnicodeDecodeError as err:
         print(err)
-        return
+        exit(324)
 
     try:
         # Send all request
@@ -234,7 +238,9 @@ def download_folder(client, url, header):
             header = get_header(client)
             receive(client, header, file_name)
     except Exception as err:
-        print (err)
+        print(err)
+        exit(331)
+
 
 
 def download(url):
@@ -243,9 +249,13 @@ def download(url):
 
     # connect to get html page
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect((host, port))
 
-    send(client, host, path)
+    try:
+        client.connect((host, port))
+        send(client, host, path)
+    except InterruptedError as err:
+        print(err)
+        exit(323)
 
     header = get_header(client)
 

@@ -12,6 +12,7 @@ def main():
         t.start()
         connections.append(t)
 
+    # wait for all thread is complete then exit function
     for thread in connections:
         thread.join()
 
