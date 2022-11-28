@@ -1,6 +1,5 @@
 import sys
 import threading
-
 from base import *
 
 def main():
