@@ -41,3 +41,21 @@ Author:
 - Multiple request: Send many request to one connection. This function I built follow by Persistent connection with pipelining
 
 - Multiple connection: Multiple thread to download many file
+
+## Error handling code
+
+323: InterruptedError
+
+324: UnicodeDecodeError
+
+325: error when downloading chunked file
+
+326: AttributeError when getting content length
+
+327: Error when receiving data and the returning packet was deviated
+
+329: error when parsing url to get folders directory
+
+330: cannot parsing html page to get file_name in a folder
+
+331: exception when downloading folder
