@@ -44,18 +44,18 @@ Author:
 
 ## Error handling code
 
-323: InterruptedError
+323: `InterruptedError`
 
-324: UnicodeDecodeError
+324: `UnicodeDecodeError`
 
-325: error when downloading chunked file
+325: Error when downloading chunked file
 
-326: AttributeError when getting content length
+326: `AttributeError` when getting content length
 
-327: Error when receiving data and the returning packet was deviated
+327: Error when receiving data and the returning packet was `deviated`
 
-329: error when parsing url to get folders directory
+329: Error when parsing url to get folders directory
 
-330: cannot parsing html page to get file_name in a folder
+330: Cannot parsing html page to get file name in a folder
 
-331: exception when downloading folder
+331: `Exception` when downloading folder
