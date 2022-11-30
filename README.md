@@ -10,13 +10,7 @@ Author:
 
 ## How to build
 
-- First you need to install `Virtualenv` by following this code:
-
-```cmd
-  pip install virtualenv
-```
-
-- Then you need to activate virtual enviroment.
+- First you need to activate virtual enviroment.
 
 ```cmd
 <your current directory to project>/venv/Scripts/activate
