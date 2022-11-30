@@ -51,7 +51,7 @@ def is_folder(url, header):
         return False
     else:
         host, path = url_parse(url)
-        if path == '/':
+        if path == '/' or path == '':
             return False
         elif path[-1] == '/':
             return True
@@ -63,7 +63,7 @@ def is_folder(url, header):
 def get_file_name(url):
     host, path = url_parse(url)
     name = re.split('/', url)
-    if name[-1] == '' or name[-1] == host:
+    if name == '' or name[-1] == '' or name[-1] == host:
         name = "index.html"
     else:
         name = name[-1]
@@ -121,7 +121,7 @@ def get_content_length(header) -> int:
 
 
 def content_length_case(client, header, file_name) -> bytes:
-    print(f'[Client] Downloading {file_name}...')
+    print(f'[Client] Downloading {file_name} (content-length)')
 
     length = get_content_length(header)
 
@@ -159,7 +159,10 @@ def chunked_case(client, file_name) -> bytes:
     data = b''
     chunk_size = parse_chunk(client)
 
-    print(f'[Client] Downloading {file_name}...')
+    if chunk_size == 0:
+        exit(324)
+
+    print(f'[Client] Downloading {file_name} (Transfer-encoding: Chunked)')
     while chunk_size != 0:
         temp = b''
         while len(temp) < chunk_size:
@@ -192,7 +195,7 @@ def receive(client, header, file_name):
     with open(file_name, 'w+b') as f:
         f.write(data)
 
-    print (f'[Client] Successful download {file_name}')
+    print (f'[Client] Successful download {file_name} ')
 
 
 def download_folder(client, url, header):
